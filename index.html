@@ -474,7 +474,9 @@ const store = {
 };
 let orders = {};      // host: alle bestellingen · gast: alleen wie besteld heeft + eigen bestelling
 let loaded = false;
-let isHost = false;
+let isHost = false;     // ziet alle bestellingen (host of meekijker)
+let isViewer = false;   // meekijker: alles zien, maar bestellen zoals een gast
+const fullHost = () => isHost && !isViewer;
 let me = null;          // wordt pas gezet na het kiezen van je naam op het welkomstscherm
 let loadingOwn = false;
 // Namen waarvoor op deze telefoon eerder een bestelling is verstuurd
@@ -489,12 +491,13 @@ let dirty = false;
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const euro = n => '€ ' + n.toFixed(2).replace('.', ',');
-const isClosed = () => Date.now() > DEADLINE.getTime() && !isHost;
+const isClosed = () => Date.now() > DEADLINE.getTime() && !fullHost();
 
 /* ============ Opslag (Google Sheet of demo) ============ */
 function fromServer(d, name) {
   if (!d.ok) throw new Error(d.error || 'Er ging iets mis');
   isHost = !!d.admin;
+  isViewer = !!d.viewer;
   if (isHost) return d.orders;
   const out = {};
   (d.ordered || []).forEach(n => out[n] = { items: null });
@@ -592,7 +595,8 @@ function renderDeadline() {
 function renderBanners() {
   let html = '';
   if (DEMO) html += '<div class="banner demo">🧪 Demo-modus: bestellingen worden alleen in deze browser bewaard.</div>';
-  if (isHost) html += '<div class="banner admin">🦉 Hostmodus: jij ziet alle bestellingen en kunt ook na de deadline nog aanpassen.</div>';
+  if (fullHost()) html += '<div class="banner admin">🦉 Hostmodus: jij ziet alle bestellingen en kunt ook na de deadline nog aanpassen.</div>';
+  else if (isViewer) html += '<div class="banner admin">👀 Meekijkmodus: je ziet alle bestellingen. Bestellen werkt zoals voor iedereen.</div>';
   else if (ADMIN && loaded) html += '<div class="banner closed">🔑 Deze beheerderscode klopt niet. Je ziet de gewone bestelpagina.</div>';
   if (isClosed()) html += '<div class="banner closed">🔒 De deadline is verstreken, bestellen of wijzigen kan niet meer. Wil je toch nog iets veranderen? Vraag het de organisator.</div>';
   $('#banners').innerHTML = html;
@@ -624,8 +628,8 @@ function ask(title, text, yes, no) {
 
 async function pickName(n) {
   await firstLoad;
-  const here = isHost ? [] : orderedHere();
-  if (isHost) {
+  const here = fullHost() ? [] : orderedHere();
+  if (fullHost()) {
     // host: geen controlevragen
   } else if (here.length && !here.includes(n)) {
     const extra = orders[n] ? ` (${n} heeft ook al besteld.)` : '';
@@ -754,7 +758,7 @@ async function submit() {
     orders = await api.save(me, clean);
     basket = JSON.parse(JSON.stringify(clean));
     dirty = false;
-    if (clean.length && !isHost) setOrderedHere([...orderedHere(), me]);
+    if (clean.length && !fullHost()) setOrderedHere([...orderedHere(), me]);
     else setOrderedHere(orderedHere().filter(n => n !== me));
     toast(clean.length ? `Top ${me}, je bestelling staat erin! 🌲` : 'Je bestelling is ingetrokken.');
   } catch (e) {
