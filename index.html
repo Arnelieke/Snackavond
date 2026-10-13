@@ -1,0 +1,1009 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Snackavond De Tussenstop</title>
+<meta name="description" content="Geef hier door wat je vrijdag wilt eten bij De Tussenstop in Hooghalen.">
+<meta name="theme-color" content="#1f3a2c">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌲</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pine: #1f3a2c;
+    --pine-2: #2c5040;
+    --moss: #5f8a45;
+    --fern: #a9c278;
+    --sand: #f4ecd9;
+    --sand-2: #e8d9b5;
+    --card: #fffbf2;
+    --bark: #7a5434;
+    --heide: #8e4f86;
+    --heide-soft: #f1e2ee;
+    --ink: #213021;
+    --muted: #6d7566;
+    --line: #e1d5b8;
+    --danger: #a8432f;
+    --radius: 16px;
+    --shadow: 0 2px 0 rgba(60, 45, 20, .06), 0 8px 24px -12px rgba(40, 50, 30, .35);
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    font-family: "Nunito", system-ui, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(1200px 500px at 10% 0%, rgba(169, 194, 120, .18), transparent 60%),
+      radial-gradient(900px 600px at 100% 30%, rgba(142, 79, 134, .08), transparent 60%),
+      var(--sand);
+    min-height: 100vh;
+    padding-bottom: 110px;
+  }
+  h1, h2, h3 { font-family: "Fraunces", Georgia, serif; margin: 0; letter-spacing: -.01em; }
+  button { font: inherit; cursor: pointer; }
+  input, textarea, select { font: inherit; color: inherit; }
+
+  /* ---------- Header met bosrand ---------- */
+  header {
+    position: relative;
+    color: var(--sand);
+    background: linear-gradient(180deg, #16291f 0%, var(--pine) 55%, var(--pine-2) 100%);
+    padding: 28px 16px 0;
+    overflow: hidden;
+  }
+  .header-inner { max-width: 760px; margin: 0 auto; position: relative; z-index: 2; padding-bottom: 92px; }
+  .eyebrow { font-weight: 800; letter-spacing: .14em; text-transform: uppercase; font-size: .72rem; color: var(--fern); }
+  header h1 { font-size: clamp(1.9rem, 6vw, 2.8rem); line-height: 1.05; margin-top: 6px; }
+  header p { margin: 10px 0 0; opacity: .85; max-width: 46ch; }
+  .moon { position: absolute; right: 8%; top: 22px; width: 54px; height: 54px; border-radius: 50%;
+          background: radial-gradient(circle at 35% 35%, #fff6d8, #f1dc9c); opacity: .9;
+          box-shadow: 0 0 40px 8px rgba(241, 220, 156, .25); z-index: 1; }
+  .forest { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 120px; z-index: 1; display: block; }
+  .deadline-pill {
+    display: inline-flex; gap: 8px; align-items: center; margin-top: 16px;
+    background: rgba(255, 251, 242, .12); border: 1px solid rgba(255, 251, 242, .2);
+    padding: 7px 14px; border-radius: 999px; font-weight: 700; font-size: .9rem;
+  }
+  .deadline-pill.closed { background: rgba(168, 67, 47, .35); }
+
+  /* ---------- Tabs ---------- */
+  nav.tabs {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--pine-2);
+    box-shadow: 0 6px 16px -10px rgba(0,0,0,.5);
+  }
+  .tabs-inner { max-width: 760px; margin: 0 auto; display: flex; gap: 4px; padding: 6px 10px; }
+  .tab {
+    flex: 1; border: 0; background: transparent; color: rgba(244, 236, 217, .75);
+    padding: 10px 4px; border-radius: 12px; font-weight: 800; font-size: .88rem; white-space: nowrap;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .tab[aria-selected="true"] { background: var(--sand); color: var(--pine); }
+
+  main { max-width: 760px; margin: 0 auto; padding: 18px 16px; }
+  section.panel[hidden], nav.tabs[hidden] { display: none; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 16px; margin-bottom: 16px;
+  }
+  .step { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .step-num {
+    width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+    background: var(--moss); color: #fff; font-weight: 800; flex: none;
+  }
+  .step h2 { font-size: 1.25rem; }
+  .muted { color: var(--muted); }
+  .small { font-size: .88rem; }
+
+  /* ---------- Namen ---------- */
+  .names { display: flex; flex-wrap: wrap; gap: 8px; }
+  .name-chip {
+    border: 1.5px solid var(--line); background: #fff; color: var(--ink);
+    padding: 9px 14px; border-radius: 999px; font-weight: 700;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .name-chip .done { color: var(--moss); font-size: .85em; }
+  .welcome { text-align: center; padding: 24px 16px; }
+  .welcome-emoji { font-size: 2.4rem; line-height: 1; }
+  .welcome-title { font-size: 1.7rem; margin-top: 6px; }
+  .welcome .names { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  .welcome .name-chip { justify-content: center; flex-direction: column; gap: 2px; padding: 14px 10px; border-radius: 14px; font-size: 1.05rem; }
+  .welcome .name-chip:hover { border-color: var(--moss); }
+  .name-chip .here { font-size: .72rem; font-weight: 800; color: var(--heide); }
+  #orderScreen[hidden], .modal-backdrop[hidden], .welcome[hidden] { display: none; }
+  .who-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+    background: var(--pine); color: var(--sand); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 16px;
+    font-size: 1.05rem; box-shadow: var(--shadow);
+  }
+  .who-bar b { color: var(--fern); }
+  .link-btn { border: 1.5px solid rgba(244, 236, 217, .4); background: transparent; color: var(--sand); border-radius: 999px; padding: 6px 12px; font-weight: 700; font-size: .88rem; }
+  .modal-backdrop { position: fixed; inset: 0; z-index: 60; background: rgba(22, 41, 31, .55); display: grid; place-items: center; padding: 16px; }
+  .modal { background: var(--card); border-radius: 20px; padding: 22px 20px 18px; max-width: 360px; width: 100%; text-align: center; box-shadow: 0 20px 50px -15px rgba(0,0,0,.5); animation: pop .18s ease-out; }
+  @keyframes pop { from { transform: scale(.94); opacity: 0; } }
+  .modal-emoji { font-size: 2rem; }
+  .modal h3 { font-size: 1.3rem; margin-top: 4px; }
+  .modal p { margin: 8px 0 18px; color: var(--muted); }
+  .modal-btns { display: flex; gap: 8px; }
+
+  /* ---------- Menu ---------- */
+  .search {
+    width: 100%; padding: 12px 14px 12px 40px; border-radius: 12px; border: 1.5px solid var(--line);
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='none' stroke='%236d7566' stroke-width='2' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") 13px center no-repeat;
+    margin-bottom: 12px;
+  }
+  .search:focus, textarea:focus, select:focus, input:focus { outline: 3px solid rgba(95, 138, 69, .35); outline-offset: 1px; }
+  details.cat { border-top: 1px dashed var(--line); }
+  details.cat:first-of-type { border-top: 0; }
+  details.cat > summary {
+    list-style: none; cursor: pointer; padding: 13px 2px; display: flex; align-items: center; gap: 10px;
+    font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.08rem;
+  }
+  details.cat > summary::-webkit-details-marker { display: none; }
+  details.cat > summary .chev { margin-left: auto; transition: transform .2s; color: var(--muted); }
+  details.cat[open] > summary .chev { transform: rotate(90deg); }
+  .cat-count { font-family: "Nunito", sans-serif; font-size: .78rem; font-weight: 800; background: var(--moss); color: #fff; border-radius: 999px; padding: 1px 8px; }
+  .items { list-style: none; margin: 0 0 10px; padding: 0; }
+  .item {
+    display: flex; align-items: center; gap: 10px; padding: 7px 4px 7px 10px; border-radius: 12px;
+  }
+  .item:nth-child(odd) { background: rgba(232, 217, 181, .28); }
+  .item .nm { flex: 1; font-weight: 600; }
+  .qty-badge { min-width: 26px; text-align: center; font-weight: 800; color: var(--pine); background: var(--fern); border-radius: 999px; padding: 1px 7px; font-size: .85rem; }
+  .add {
+    width: 40px; height: 40px; border-radius: 12px; border: 0; flex: none;
+    background: var(--pine); color: var(--sand); font-size: 1.4rem; line-height: 1; font-weight: 700;
+  }
+  .add:active { transform: scale(.94); }
+  .item.flash { animation: flash .5s ease; }
+  @keyframes flash { from { background: rgba(169, 194, 120, .7); } }
+
+  /* ---------- Mandje ---------- */
+  .basket-empty { text-align: center; padding: 18px 8px; color: var(--muted); }
+  .line { border: 1px solid var(--line); background: #fff; border-radius: 14px; padding: 10px 12px; margin-bottom: 10px; }
+  .line-top { display: flex; align-items: center; gap: 10px; }
+  .line-top .nm { flex: 1; font-weight: 700; }
+  .stepper { display: inline-flex; align-items: center; border: 1.5px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .stepper button { width: 36px; height: 34px; border: 0; background: var(--sand); font-weight: 800; font-size: 1.1rem; color: var(--pine); }
+  .stepper span { min-width: 30px; text-align: center; font-weight: 800; }
+  .line-opts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .line-opts select, .line-opts input {
+    flex: 1 1 160px; padding: 8px 10px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--sand); min-width: 0;
+  }
+  .sauces { border: 0; margin: 0; padding: 0; flex: 1 1 100%; display: flex; flex-wrap: wrap; gap: 6px; }
+  .sauces legend { font-size: .82rem; font-weight: 800; color: var(--muted); margin-bottom: 6px; padding: 0; }
+  .sauce input { position: absolute; opacity: 0; pointer-events: none; }
+  .sauce span {
+    display: inline-flex; align-items: center; gap: 5px; padding: 6px 11px; border-radius: 999px;
+    border: 1.5px solid var(--line); background: var(--sand); font-weight: 700; font-size: .88rem; cursor: pointer;
+  }
+  .sauce span::before { content: ''; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--muted); box-sizing: border-box; }
+  .sauce input:checked + span { background: var(--moss); border-color: var(--moss); color: #fff; }
+  .sauce input:checked + span::before { border-color: #fff; background: #fff; box-shadow: inset 0 0 0 2px var(--moss); }
+  .sauce input:focus-visible + span { outline: 3px solid rgba(95, 138, 69, .35); }
+  .portion {
+    margin: -2px 0 8px 14px; padding: 10px 12px; border-left: 3px solid var(--moss);
+    background: rgba(169, 194, 120, .16); border-radius: 0 12px 12px 0;
+  }
+  .portion-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; font-weight: 800; font-size: .88rem; color: var(--pine); }
+  .portion-del { border: 0; background: transparent; color: var(--muted); font-size: 1rem; padding: 2px 6px; border-radius: 8px; }
+  .portion .sauces { flex: none; }
+  .submit {
+    width: 100%; border: 0; border-radius: 14px; padding: 15px; font-weight: 800; font-size: 1.05rem;
+    background: var(--heide); color: #fff; box-shadow: 0 6px 16px -8px rgba(142, 79, 134, .8);
+  }
+  .submit:disabled { opacity: .5; cursor: not-allowed; box-shadow: none; }
+  .saved-note { background: var(--heide-soft); border-radius: 12px; padding: 10px 12px; margin-bottom: 12px; font-weight: 600; }
+
+  /* ---------- Zwevende balk ---------- */
+  .dock {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: linear-gradient(180deg, rgba(244, 236, 217, 0), var(--sand) 35%);
+    pointer-events: none;
+  }
+  .dock button {
+    pointer-events: auto; display: flex; width: 100%; max-width: 728px; margin: 0 auto;
+    align-items: center; justify-content: space-between; gap: 10px;
+    border: 0; border-radius: 16px; padding: 14px 18px; background: var(--pine); color: var(--sand);
+    font-weight: 800; font-size: 1rem; box-shadow: 0 10px 24px -10px rgba(31, 58, 44, .9);
+  }
+  .dock .pill { background: var(--fern); color: var(--pine); border-radius: 999px; padding: 2px 10px; }
+  .dock[hidden] { display: none; }
+
+  /* ---------- Overzichten ---------- */
+  .progress { display: flex; flex-wrap: wrap; gap: 2px; margin: 6px 0 4px; }
+  .progress svg { width: 22px; height: 27px; }
+  .person { padding: 12px 0; border-top: 1px dashed var(--line); }
+  .person:first-of-type { border-top: 0; padding-top: 4px; }
+  .person-head { display: flex; align-items: baseline; gap: 8px; }
+  .person-head h3 { font-size: 1.1rem; }
+  .person-head .amt { margin-left: auto; color: var(--muted); font-size: .88rem; font-weight: 700; }
+  .person ul { margin: 6px 0 0; padding-left: 18px; }
+  .person li { margin: 2px 0; }
+  .note { color: var(--heide); font-style: italic; }
+  .missing { color: var(--muted); font-style: italic; margin-top: 2px; }
+  .total-cat { margin-top: 14px; }
+  .total-cat h3 { font-size: 1rem; color: var(--moss); text-transform: uppercase; letter-spacing: .08em; font-family: "Nunito", sans-serif; font-weight: 800; }
+  .total-row { display: flex; gap: 10px; padding: 6px 0; border-bottom: 1px dashed var(--line); }
+  .total-row .q { font-weight: 800; min-width: 38px; color: var(--pine); }
+  .total-row .who { color: var(--muted); font-size: .85rem; }
+  .estimate { display: flex; justify-content: space-between; gap: 10px; background: var(--sand); border-radius: 12px; padding: 10px 12px; margin-top: 16px; font-weight: 700; }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .btn {
+    flex: 1 1 auto; border: 1.5px solid var(--pine); background: transparent; color: var(--pine);
+    border-radius: 12px; padding: 11px 14px; font-weight: 800;
+  }
+  .btn.primary { background: var(--pine); color: var(--sand); }
+  .loading { text-align: center; padding: 28px; color: var(--muted); }
+
+  .banner { border-radius: 14px; padding: 12px 14px; margin-bottom: 16px; font-weight: 700; }
+  .banner.closed { background: #f6dfd8; color: var(--danger); }
+  .banner.demo { background: #fff3c9; color: #7a5a00; }
+  .banner.admin { background: var(--heide-soft); color: var(--heide); }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%) translateY(20px);
+    background: var(--pine); color: var(--sand); padding: 12px 18px; border-radius: 14px; font-weight: 700;
+    opacity: 0; transition: .25s; z-index: 50; max-width: calc(100% - 32px); text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.err { background: var(--danger); }
+
+  /* ---------- Kaarten (host) ---------- */
+  .cards-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .cards-top .btn { flex: none; }
+  .carousel {
+    display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory;
+    padding: 4px 2px 14px; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .carousel::-webkit-scrollbar { display: none; }
+  .carousel > .order-card { flex: 0 0 100%; scroll-snap-align: center; }
+  .order-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow);
+    overflow: hidden; display: flex; flex-direction: column; min-height: 300px;
+  }
+  .order-card .oc-head {
+    position: relative; flex: none; background: linear-gradient(160deg, var(--pine), var(--pine-2)); color: var(--sand);
+    padding: 18px 20px 30px; overflow: hidden;
+  }
+  .order-card .oc-head small { color: var(--fern); font-weight: 800; letter-spacing: .12em; text-transform: uppercase; font-size: .7rem; }
+  .order-card .oc-name { font-family: "Fraunces", Georgia, serif; font-weight: 800; font-size: 2.1rem; line-height: 1.1; margin-top: 2px; }
+  .order-card .oc-trees { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 22px; }
+  .order-card .oc-body { padding: 14px 20px 18px; flex: 1; }
+  .order-card ul { list-style: none; margin: 0; padding: 0; }
+  .order-card li { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 1.08rem; }
+  .order-card li:last-child { border-bottom: 0; }
+  .order-card li .q { font-weight: 800; color: var(--moss); min-width: 30px; }
+  .carousel-nav { display: flex; align-items: center; justify-content: center; gap: 16px; font-weight: 800; color: var(--pine); }
+  .nav-btn { width: 46px; height: 46px; border-radius: 50%; border: 0; background: var(--pine); color: var(--sand); font-size: 1.6rem; line-height: 1; }
+  .nav-btn:disabled { opacity: .3; }
+  #printArea { display: none; }
+
+  @media print {
+    @page { size: A4 portrait; margin: 10mm; }
+    body { background: #fff !important; padding: 0 !important; min-height: 0; }
+    body > *:not(#printArea) { display: none !important; }
+    #printArea { display: block !important; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .print-page {
+      display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 8mm;
+      height: 275mm; page-break-after: always; break-after: page;
+    }
+    .print-page:last-child { page-break-after: auto; break-after: auto; }
+    .print-page .order-card { box-shadow: none; border: 1.5px dashed #9a8f73; border-radius: 6mm; min-height: 0; height: 100%; }
+    .print-page .order-card .oc-name { font-size: 26pt; }
+    .print-page .order-card li { font-size: 13pt; padding: 2.2mm 0; }
+    .print-page .order-card .oc-body { overflow: hidden; min-height: 0; }
+    /* Lange bestellingen: kleiner, en bij heel lang in twee kolommen */
+    .print-page .order-card.long li { font-size: 10.5pt; padding: 1.2mm 0; }
+    .print-page .order-card.xlong ul { columns: 2; column-gap: 5mm; }
+    .print-page .order-card.xlong li { font-size: 9pt; padding: .8mm 0; break-inside: avoid; }
+  }
+
+  footer { text-align: center; color: var(--muted); font-size: .82rem; padding: 10px 16px 24px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="moon" aria-hidden="true"></div>
+  <div class="header-inner">
+    <div class="eyebrow">Vrijdagavond · Hooghalen</div>
+    <h1>Snackavond bij<br>De Tussenstop</h1>
+    <p>Kies je naam, tik aan wat je wilt eten en drinken, en verstuur. Je kunt je bestelling tot de deadline nog aanpassen.</p>
+    <div class="deadline-pill" id="deadlinePill">⏳ <span id="deadlineText">…</span></div>
+  </div>
+  <svg class="forest" id="forest" viewBox="0 0 1000 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
+</header>
+
+<nav class="tabs" id="tabs" aria-label="Onderdelen" hidden>
+  <div class="tabs-inner" role="tablist">
+    <button class="tab" role="tab" data-tab="bestellen" aria-selected="true">🍟 Bestellen</button>
+    <button class="tab" role="tab" data-tab="personen" aria-selected="false">👥 Personen</button>
+    <button class="tab" role="tab" data-tab="kaarten" aria-selected="false">🃏 Kaarten</button>
+    <button class="tab" role="tab" data-tab="totaal" aria-selected="false">📋 Totaal</button>
+  </div>
+</nav>
+
+<main>
+  <div id="banners"></div>
+
+  <!-- ===== Bestellen ===== -->
+  <section class="panel" id="panel-bestellen">
+    <div class="card welcome" id="welcome">
+      <div class="welcome-emoji" aria-hidden="true">🦊</div>
+      <h2 class="welcome-title">Wie ben jij?</h2>
+      <p class="muted" style="margin:6px 0 16px">Tik op je naam, dan open je je eigen bestelling.</p>
+      <div class="names" id="names"></div>
+    </div>
+
+    <div id="orderScreen" hidden>
+    <div class="who-bar">
+      <span>Hoi <b id="whoName"></b> 👋</span>
+      <button class="link-btn" id="switchName">Niet jij? Wissel</button>
+    </div>
+
+    <div class="card" id="menuCard">
+      <div class="step"><div class="step-num">1</div><h2>Wat wil je?</h2></div>
+      <input class="search" id="search" type="search" placeholder="Zoek op de kaart… (bijv. kroket)" autocomplete="off">
+      <div id="menu"></div>
+    </div>
+
+    <div class="card" id="basketCard">
+      <div class="step"><div class="step-num">2</div><h2>Jouw bestelling</h2></div>
+      <div id="savedNote"></div>
+      <div id="basket"></div>
+      <button class="submit" id="submit">Bestelling versturen</button>
+    </div>
+    </div>
+  </section>
+
+  <!-- ===== Per persoon ===== -->
+  <section class="panel" id="panel-personen" hidden>
+    <div class="card">
+      <h2 style="font-size:1.35rem">Per persoon</h2>
+      <div class="progress" id="progress"></div>
+      <p class="muted small" id="progressText" style="margin:4px 0 8px"></p>
+      <div id="persons"><div class="loading">Bestellingen ophalen…</div></div>
+    </div>
+  </section>
+
+  <!-- ===== Kaarten (host) ===== -->
+  <section class="panel" id="panel-kaarten" hidden>
+    <div class="cards-top">
+      <h2 style="font-size:1.35rem">Kaarten per persoon</h2>
+      <button class="btn primary" id="pdfBtn">🖨️ PDF maken</button>
+    </div>
+    <p class="muted small" style="margin:4px 0 12px">Swipe of gebruik de pijltjes. Met <b>PDF maken</b> kies je bij het printen voor <i>Opslaan als PDF</i>: 4 kaarten per A4.</p>
+    <div class="carousel" id="carousel"></div>
+    <div class="carousel-nav" id="carouselNav">
+      <button class="nav-btn" id="prevCard" aria-label="Vorige kaart">‹</button>
+      <span id="cardCounter"></span>
+      <button class="nav-btn" id="nextCard" aria-label="Volgende kaart">›</button>
+    </div>
+  </section>
+
+  <!-- ===== Totaal ===== -->
+  <section class="panel" id="panel-totaal" hidden>
+    <div class="card">
+      <h2 style="font-size:1.35rem">Totaalbestelling</h2>
+      <p class="muted small" id="totalMeta" style="margin:6px 0 0"></p>
+      <div id="total"><div class="loading">Bestellingen ophalen…</div></div>
+      <div class="btn-row">
+        <button class="btn primary" id="copyBtn">📋 Kopieer bestelling</button>
+        <button class="btn" id="refreshBtn">↻ Vernieuwen</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>🌲 Eet smakelijk!</footer>
+
+<div class="dock" id="dock" hidden>
+  <button id="dockBtn"><span>🧺 Bekijk &amp; verstuur</span><span class="pill" id="dockCount">0</span></button>
+</div>
+<div id="printArea" aria-hidden="true"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="modal-backdrop" id="modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-emoji" aria-hidden="true">🦉</div>
+    <h3 id="modalTitle"></h3>
+    <p id="modalText"></p>
+    <div class="modal-btns"><button class="btn" id="modalNo"></button><button class="btn primary" id="modalYes"></button></div>
+  </div>
+</div>
+
+<script>
+/* ============ Instellingen ============ */
+// Plak hier de web-app-URL van Google Apps Script (eindigt op /exec).
+// Leeg laten = demo-modus: bestellingen worden alleen in deze browser bewaard.
+const API_URL = 'https://script.google.com/macros/s/AKfycbyalHExl4AD-um0VWzn3rJ6KtupBrZZES47TyAuvPyXzH0piukNxlSRfT-we9HM7927Zg/exec';
+const DEADLINE = new Date('2026-10-15T12:00:00+02:00');
+const NAMES = ['Arnelieke', 'Bente', 'Domenique', 'Elsbeth', 'Jeroen', 'Kees',
+               'Martin', 'Mischa', 'Rieneke', 'Senn', 'Twan'];
+
+/* ============ Menukaart ============ */
+const MENU = [
+  { cat: 'Patat', emoji: '🍟', saus: true, items: [
+    ['Patat normaal', 2.65], ['Patat groot', 3.75], ['Raspatat normaal', 2.85], ['Raspatat groot', 4.00] ] },
+  { cat: 'Snacks', emoji: '🌭', items: [
+    ['Frikandel', 2.10], ['Kroket', 2.20], ['Goulashkroket', 2.90], ['Kalfskroket', 2.90], ['Satékroket', 2.90],
+    ['Rundvleeskroket', 2.75], ['Kaassoufflé (veg)', 2.40], ['Hamburger', 2.40], ['Bamischijf', 2.35],
+    ['Nasischijf', 2.35], ['Eigengemaakte gehaktbal', 3.35], ['Berehap', 3.65], ['Picanto', 2.50],
+    ['Mexicano', 2.90], ['Smulrol', 3.10], ['Shoarmarol', 3.40], ['Loempia', 4.00], ['Portie bitterballen', 3.95],
+    ['Schnitzel', 6.75], ['Shoarma', 4.70], ['Stoofvlees', 4.95], ["Mini vega loempia's (veg)", 3.60],
+    ['Kipnuggets', 3.30], ['Kipfingers', 3.80], ['Kipcorn', 2.40], ['Kipburger', 3.00], ['Kip/kalkoen stick', 4.00] ] },
+  { cat: 'Broodjes', emoji: '🥖', items: [
+    ['Broodje kroket', 3.10], ['Broodje frikandel', 3.00], ['Broodje shoarma', 6.50], ['Broodje kipburger', 5.40],
+    ['Broodje warm vlees', 6.25], ['Hamburger speciaal', 4.80], ['Cheeseburger', 5.45], ['Baconburger', 5.45],
+    ['Joppieburger', 5.50] ] },
+  { cat: 'Drinken', emoji: '🥤', drink: true, items: [
+    ['Coca-Cola'], ['Coca-Cola Zero'], ['Fanta'], ['Sprite'], ['Fuze Tea'], ['Cassis'],
+    ['Spa blauw'], ['Spa rood'], ['Chocomel'], ['Fristi'] ] }
+];
+// Sauzen: alleen te kiezen onder friet (één per portie)
+const SAUCE_LIST = [
+  ['Fritessaus', 0.70], ['Curry', 0.70], ['Ketchup', 0.70], ['Satésaus', 0.90],
+  ['Brander mayonaise', 0.90], ['Oorlog', 0.90], ['Speciaal', 0.90], ['Joppiesaus', 0.90] ];
+
+const slug = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const ITEMS = {};
+MENU.forEach(c => {
+  c.id = slug(c.cat);
+  c.list = c.items.map(([name, price]) => {
+    const it = { id: c.id + '/' + slug(name), name, price: price || 0, cat: c, saus: !!c.saus };
+    ITEMS[it.id] = it;
+    return it;
+  });
+});
+const SAUCES = SAUCE_LIST.map(([name, price]) => (ITEMS['saus/' + slug(name)] = { id: 'saus/' + slug(name), name, price }));
+
+/* ============ Staat ============ */
+const params = new URLSearchParams(location.search);
+const ADMIN = params.get('beheer') || '';
+const DEMO = !API_URL;
+const memory = {};
+const store = {
+  get(k) { try { const v = localStorage.getItem(k); if (v != null) return v; } catch (e) {} return k in memory ? memory[k] : null; },
+  set(k, v) { memory[k] = v; try { localStorage.setItem(k, v); } catch (e) {} }
+};
+let orders = {};      // host: alle bestellingen · gast: alleen wie besteld heeft + eigen bestelling
+let loaded = false;
+let isHost = false;
+let me = null;          // wordt pas gezet na het kiezen van je naam op het welkomstscherm
+let loadingOwn = false;
+// Namen waarvoor op deze telefoon eerder een bestelling is verstuurd
+const orderedHere = () => {
+  try { return (JSON.parse(store.get('snack-ordered-here') || '[]')).filter(n => NAMES.includes(n)); } catch (e) { return []; }
+};
+const setOrderedHere = list => store.set('snack-ordered-here', JSON.stringify([...new Set(list)]));
+const listNames = a => a.length > 1 ? a.slice(0, -1).join(', ') + ' en ' + a[a.length - 1] : a[0];
+let basket = [];
+let dirty = false;
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const euro = n => '€ ' + n.toFixed(2).replace('.', ',');
+const isClosed = () => Date.now() > DEADLINE.getTime() && !isHost;
+
+/* ============ Opslag (Google Sheet of demo) ============ */
+function fromServer(d, name) {
+  if (!d.ok) throw new Error(d.error || 'Er ging iets mis');
+  isHost = !!d.admin;
+  if (isHost) return d.orders;
+  const out = {};
+  (d.ordered || []).forEach(n => out[n] = { items: null });
+  if (name && d.order) out[name] = d.order;
+  return out;
+}
+function demoView(all, name) {
+  isHost = !!ADMIN;
+  if (isHost) return all;
+  const out = {};
+  Object.keys(all).forEach(n => out[n] = { items: null });
+  if (name && all[name]) out[name] = all[name];
+  return out;
+}
+
+const api = {
+  async load(name) {
+    if (DEMO) return demoView(JSON.parse(store.get('snack-demo-orders') || '{}'), name);
+    const q = new URLSearchParams();
+    if (name) q.set('name', name);
+    if (ADMIN) q.set('key', ADMIN);
+    const r = await fetch(API_URL + '?' + q, { cache: 'no-store' });
+    return fromServer(await r.json(), name);
+  },
+  async save(name, items) {
+    const summary = items.map(lineLabel).join(', ');
+    const amount = Math.round(items.reduce((s, l) => s + linePrice(l), 0) * 100) / 100;
+    if (DEMO) {
+      const all = JSON.parse(store.get('snack-demo-orders') || '{}');
+      if (items.length) all[name] = { items, updated: new Date().toISOString() };
+      else delete all[name];
+      store.set('snack-demo-orders', JSON.stringify(all));
+      return demoView(all, name);
+    }
+    // text/plain voorkomt een CORS-preflight bij Apps Script
+    const r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ name, items, summary, amount, admin: ADMIN }) });
+    return fromServer(await r.json(), name);
+  }
+};
+
+/* ============ Hulpjes voor regels ============ */
+function lineLabel(l) {
+  const it = ITEMS[l.id];
+  if (!it) return '';
+  let s = l.qty + '× ' + it.name;
+  if (it.saus) s += l.saus && ITEMS[l.saus] ? ' met ' + ITEMS[l.saus].name.toLowerCase() : ' zonder saus';
+  if (l.opm) s += ' (' + l.opm + ')';
+  return s;
+}
+function linePrice(l) {
+  const it = ITEMS[l.id];
+  if (!it) return 0;
+  const saus = it.saus && l.saus && ITEMS[l.saus] ? ITEMS[l.saus].price : 0;
+  return (it.price + saus) * l.qty;
+}
+const cleanItems = items => (items || []).filter(l => ITEMS[l.id] && l.qty > 0);
+
+/* ============ Bos in de header ============ */
+(function drawForest() {
+  const svg = $('#forest');
+  const rows = [
+    { color: '#3d6652', h: [45, 80], y: 120, gap: 26, seed: 3 },
+    { color: '#2c5040', h: [35, 65], y: 120, gap: 34, seed: 7 },
+  ];
+  let out = '';
+  rows.forEach(r => {
+    let x = -20, seed = r.seed;
+    const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+    while (x < 1020) {
+      const h = r.h[0] + rnd() * (r.h[1] - r.h[0]);
+      const w = h * (0.38 + rnd() * 0.12);
+      const top = r.y - h;
+      out += `<path fill="${r.color}" d="M${x} ${top} L${x + w * .32} ${top + h * .3} L${x + w * .18} ${top + h * .3} L${x + w * .44} ${top + h * .6} L${x + w * .26} ${top + h * .6} L${x + w * .5} ${r.y} L${x - w * .5} ${r.y} L${x - w * .26} ${top + h * .6} L${x - w * .44} ${top + h * .6} L${x - w * .18} ${top + h * .3} L${x - w * .32} ${top + h * .3} Z"/>`;
+      x += r.gap * (0.6 + rnd() * 0.8);
+    }
+  });
+  out += '<rect x="0" y="112" width="1000" height="10" fill="#2c5040"/>';
+  svg.innerHTML = out;
+})();
+
+/* ============ Deadline ============ */
+function renderDeadline() {
+  const pill = $('#deadlinePill');
+  const ms = DEADLINE.getTime() - Date.now();
+  if (ms <= 0) {
+    pill.classList.add('closed');
+    $('#deadlineText').textContent = 'Bestellen is gesloten';
+    return;
+  }
+  const d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, m = Math.floor(ms / 6e4) % 60;
+  const left = d > 0 ? `${d} dag${d > 1 ? 'en' : ''} en ${h} uur` : h > 0 ? `${h} uur en ${m} min` : `${m} min`;
+  $('#deadlineText').textContent = `Bestellen kan tot do 15 okt, 12:00 · nog ${left}`;
+}
+
+function renderBanners() {
+  let html = '';
+  if (DEMO) html += '<div class="banner demo">🧪 Demo-modus: bestellingen worden alleen in deze browser bewaard.</div>';
+  if (isHost) html += '<div class="banner admin">🦉 Hostmodus: jij ziet alle bestellingen en kunt ook na de deadline nog aanpassen.</div>';
+  else if (ADMIN && loaded) html += '<div class="banner closed">🔑 Deze beheerderscode klopt niet. Je ziet de gewone bestelpagina.</div>';
+  if (isClosed()) html += '<div class="banner closed">🔒 De deadline is verstreken, bestellen of wijzigen kan niet meer. Wil je toch nog iets veranderen? Vraag het de organisator.</div>';
+  $('#banners').innerHTML = html;
+}
+
+/* ============ Welkomstscherm: wie ben jij? ============ */
+function renderNames() {
+  const here = orderedHere();
+  $('#names').innerHTML = NAMES.map(n => `
+    <button class="name-chip" data-name="${esc(n)}">
+      <span>${esc(n)}${orders[n] ? ' <span class="done" title="heeft besteld">✓</span>' : ''}</span>
+      ${here.includes(n) ? '<span class="here">deze telefoon</span>' : ''}
+    </button>`).join('');
+}
+
+function ask(title, text, yes, no) {
+  return new Promise(resolve => {
+    $('#modalTitle').textContent = title;
+    $('#modalText').textContent = text;
+    $('#modalYes').textContent = yes;
+    $('#modalNo').textContent = no;
+    $('#modal').hidden = false;
+    $('#modalYes').focus();
+    const done = ok => { $('#modal').hidden = true; $('#modalYes').onclick = $('#modalNo').onclick = null; resolve(ok); };
+    $('#modalYes').onclick = () => done(true);
+    $('#modalNo').onclick = () => done(false);
+  });
+}
+
+async function pickName(n) {
+  await firstLoad;
+  const here = isHost ? [] : orderedHere();
+  if (isHost) {
+    // host: geen controlevragen
+  } else if (here.length && !here.includes(n)) {
+    const extra = orders[n] ? ` (${n} heeft ook al besteld.)` : '';
+    if (!await ask('Even checken…', `Op deze telefoon is eerder besteld als ${listNames(here)}. Wil je echt voor ${n} bestellen?${extra}`, `Ja, voor ${n}`, 'Nee')) return;
+  } else if (!here.length && orders[n]) {
+    if (!await ask(`${n} heeft al besteld`, `Ben jij ${n}?`, 'Ja', 'Nee')) return;
+  }
+  me = n;
+  basket = [];
+  dirty = false;
+  // Gasten krijgen hun eigen bestelling pas na het kiezen van hun naam
+  loadingOwn = !!(orders[n] && !orders[n].items);
+  if (!loadingOwn) basket = JSON.parse(JSON.stringify(cleanItems(orders[n] && orders[n].items)));
+  renderAll();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (loadingOwn) { await refresh(false); loadingOwn = false; renderAll(); }
+}
+
+async function switchName() {
+  if (dirty && basket.length && !await ask('Nog niet verstuurd', 'Je bestelling is nog niet verstuurd. Toch wisselen van naam?', 'Ja, wisselen', 'Nee')) return;
+  me = null; basket = []; dirty = false;
+  renderAll();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ============ Stap 2: menukaart ============ */
+function countFor(id) { return basket.filter(l => l.id === id).reduce((s, l) => s + l.qty, 0); }
+
+function renderMenu() {
+  const q = slug($('#search').value);
+  const html = MENU.map((c, i) => {
+    const list = c.list.filter(it => !q || slug(it.name).includes(q) || slug(c.cat).includes(q));
+    if (!list.length) return '';
+    const catCount = c.list.reduce((s, it) => s + countFor(it.id), 0);
+    const open = q || openCats.has(c.id);
+    return `<details class="cat" data-cat="${c.id}" ${open ? 'open' : ''}>
+      <summary><span>${c.emoji}</span><span>${esc(c.cat)}</span>${catCount ? `<span class="cat-count">${catCount}</span>` : ''}<span class="chev">›</span></summary>
+      <ul class="items">${list.map(it => {
+        const n = countFor(it.id);
+        return `<li class="item" data-item="${it.id}"><span class="nm">${esc(it.name)}</span>
+          ${n ? `<span class="qty-badge">${n}</span>` : ''}
+          <button class="add" data-add="${it.id}" aria-label="${esc(it.name)} toevoegen" ${isClosed() ? 'disabled' : ''}>+</button></li>
+          ${it.saus ? portions(it.id) : ''}`;
+      }).join('')}</ul></details>`;
+  }).join('');
+  $('#menu').innerHTML = html || '<p class="muted">Niets gevonden op de kaart.</p>';
+}
+const openCats = new Set(['patat']);
+
+// Per portie friet een eigen sauskeuze, direct onder het item op de kaart
+function sauceChips(i, prefix) {
+  return [{ id: '', name: 'Geen saus' }, ...SAUCES].map(s => `<label class="sauce">
+    <input type="radio" name="${prefix}-saus-${i}" data-saus="${i}" value="${s.id}" ${(basket[i].saus || '') === s.id ? 'checked' : ''}>
+    <span>${esc(s.name)}</span></label>`).join('');
+}
+function portions(id) {
+  const idx = basket.map((l, i) => l.id === id ? i : -1).filter(i => i >= 0);
+  return idx.map((i, k) => `<li class="portion">
+      <div class="portion-head">
+        <span>${idx.length > 1 ? `Portie ${k + 1}: welke saus?` : 'Welke saus?'}</span>
+        <button class="portion-del" data-dec="${i}" aria-label="Portie verwijderen">✕</button>
+      </div>
+      <div class="sauces">${sauceChips(i, 'm')}</div>
+    </li>`).join('');
+}
+
+function addItem(id) {
+  if (!me || loadingOwn) return;
+  const existing = !ITEMS[id].saus && basket.find(l => l.id === id && !l.opm);
+  if (existing) existing.qty++;
+  else basket.push({ id, qty: 1, saus: '', opm: '' });
+  dirty = true;
+  renderMenu(); renderBasket(); renderDock();
+  const row = document.querySelector(`.item[data-item="${CSS.escape(id)}"]`);
+  if (row) { row.classList.remove('flash'); void row.offsetWidth; row.classList.add('flash'); }
+}
+
+/* ============ Stap 3: mandje ============ */
+function renderBasket() {
+  const saved = me && orders[me];
+  $('#savedNote').innerHTML = !me ? '' : saved && !dirty
+    ? `<div class="saved-note">✅ Je bestelling is opgeslagen. Je kunt hem hieronder nog aanpassen.</div>`
+    : saved && dirty ? `<div class="saved-note">✏️ Je hebt wijzigingen die nog niet verstuurd zijn.</div>` : '';
+
+  if (!me || loadingOwn) {
+    $('#basket').innerHTML = '<div class="basket-empty">Je bestelling ophalen…</div>';
+  } else if (!basket.length) {
+    $('#basket').innerHTML = '<div class="basket-empty">🍂 Nog niets gekozen. Tik op <b>+</b> bij iets op de kaart.</div>';
+  } else {
+    $('#basket').innerHTML = basket.map((l, i) => {
+      const it = ITEMS[l.id];
+      const sausSelect = it.saus ? `<fieldset class="sauces"><legend>Saus erbij?</legend>${sauceChips(i, 'b')}</fieldset>` : '';
+      return `<div class="line">
+        <div class="line-top">
+          <span class="nm">${esc(it.name)}</span>
+          <span class="stepper">
+            <button data-dec="${i}" aria-label="Minder">−</button><span>${l.qty}</span><button data-inc="${i}" aria-label="Meer">+</button>
+          </span>
+        </div>
+        <div class="line-opts">
+          ${sausSelect}
+          <input data-opm="${i}" value="${esc(l.opm || '')}" maxlength="80" placeholder="Opmerking (bijv. zonder ui)">
+        </div>
+      </div>`;
+    }).join('');
+  }
+  const btn = $('#submit');
+  btn.disabled = !me || loadingOwn || isClosed() || (!basket.length && !saved) || (!dirty && saved);
+  btn.textContent = !basket.length && saved ? 'Bestelling intrekken' : saved ? 'Wijzigingen opslaan' : 'Bestelling versturen';
+}
+
+function renderDock() {
+  const n = basket.reduce((s, l) => s + l.qty, 0);
+  const onOrderTab = !$('#panel-bestellen').hidden;
+  $('#dock').hidden = !onOrderTab || !me || !n || isClosed();
+  $('#dockCount').textContent = n + (n === 1 ? ' item' : ' items');
+}
+
+async function submit() {
+  if (!me || isClosed()) return;
+  if (!basket.length && !await ask('Bestelling intrekken?', `Weet je zeker dat je de bestelling van ${me} wilt intrekken?`, 'Ja, intrekken', 'Nee')) return;
+  const btn = $('#submit');
+  btn.disabled = true; btn.textContent = 'Bezig met versturen…';
+  try {
+    const clean = cleanItems(basket).map(l => ({ id: l.id, qty: l.qty, saus: ITEMS[l.id].saus ? (l.saus || '') : '', opm: (l.opm || '').trim().slice(0, 80) }));
+    orders = await api.save(me, clean);
+    basket = JSON.parse(JSON.stringify(clean));
+    dirty = false;
+    if (clean.length && !isHost) setOrderedHere([...orderedHere(), me]);
+    else setOrderedHere(orderedHere().filter(n => n !== me));
+    toast(clean.length ? `Top ${me}, je bestelling staat erin! 🌲` : 'Je bestelling is ingetrokken.');
+  } catch (e) {
+    toast('Er ging iets mis: ' + e.message, true);
+  }
+  renderAll();
+}
+
+/* ============ Per persoon ============ */
+function treeIcon(on) {
+  return `<svg viewBox="0 0 26 32" aria-hidden="true"><path fill="${on ? '#5f8a45' : '#d9cba8'}" d="M13 1 L21 12 H17 L24 22 H2 L9 12 H5 Z"/><rect x="11" y="22" width="4" height="8" fill="${on ? '#7a5434' : '#d9cba8'}"/></svg>`;
+}
+function renderPersons() {
+  if (!loaded || !isHost) return;
+  const done = NAMES.filter(n => orders[n]);
+  $('#progress').innerHTML = NAMES.map(n => treeIcon(!!orders[n])).join('');
+  const missing = NAMES.filter(n => !orders[n]);
+  $('#progressText').innerHTML = `<b>${done.length} van ${NAMES.length}</b> hebben besteld` +
+    (missing.length ? ` · nog niet: ${missing.map(esc).join(', ')}` : ' · iedereen is binnen! 🎉');
+  $('#persons').innerHTML = NAMES.map(n => {
+    const items = cleanItems(orders[n] && orders[n].items);
+    const amount = items.reduce((s, l) => s + linePrice(l), 0);
+    return `<div class="person">
+      <div class="person-head"><h3>${esc(n)}</h3>${items.length ? `<span class="amt">± ${euro(amount)}</span>` : ''}</div>
+      ${items.length ? `<ul>${items.map(l => {
+        const it = ITEMS[l.id];
+        let s = `${l.qty}× ${esc(it.name)}`;
+        if (it.saus) s += l.saus && ITEMS[l.saus] ? ' met ' + esc(ITEMS[l.saus].name.toLowerCase()) : ' zonder saus';
+        if (l.opm) s += ` <span class="note">– ${esc(l.opm)}</span>`;
+        return `<li>${s}</li>`;
+      }).join('')}</ul>` : '<div class="missing">Nog niet besteld</div>'}
+    </div>`;
+  }).join('');
+}
+
+/* ============ Kaarten (host) ============ */
+function cardTrees() {
+  let d = '';
+  for (let x = 0; x < 400; x += 14 + (x * 7) % 9) {
+    const h = 10 + (x * 13) % 12;
+    d += `M${x} 22 L${x + 6} ${22 - h} L${x + 12} 22 Z `;
+  }
+  return `<svg class="oc-trees" viewBox="0 0 400 22" preserveAspectRatio="none" aria-hidden="true"><path fill="#fffbf2" d="${d}"/><rect y="20" width="400" height="2" fill="#fffbf2"/></svg>`;
+}
+function orderCard(n) {
+  const items = cleanItems(orders[n] && orders[n].items);
+  const size = items.length > 12 ? ' xlong' : items.length > 8 ? ' long' : '';
+  return `<article class="order-card${size}">
+    <div class="oc-head"><small>Bestelling voor</small><div class="oc-name">${esc(n)}</div>${cardTrees()}</div>
+    <div class="oc-body"><ul>${items.map(l => {
+      const it = ITEMS[l.id];
+      let t = esc(it.name);
+      if (it.saus) t += l.saus && ITEMS[l.saus] ? ' met ' + esc(ITEMS[l.saus].name.toLowerCase()) : ' zonder saus';
+      if (l.opm) t += ` <span class="note">– ${esc(l.opm)}</span>`;
+      return `<li><span class="q">${l.qty}×</span><span>${t}</span></li>`;
+    }).join('')}</ul></div>
+  </article>`;
+}
+const cardNames = () => NAMES.filter(n => cleanItems(orders[n] && orders[n].items).length);
+
+function renderCards() {
+  if (!loaded || !isHost) return;
+  const names = cardNames();
+  const c = $('#carousel');
+  const keep = c.children.length ? currentCard() : 0;
+  c.innerHTML = names.length
+    ? names.map(n => orderCard(n)).join('')
+    : '<div class="card loading" style="flex:1">🍂 Er is nog niets besteld.</div>';
+  $('#carouselNav').hidden = names.length < 2;
+  $('#pdfBtn').disabled = !names.length;
+  // Na het verversen op dezelfde kaart blijven staan
+  c.scrollLeft = Math.min(keep, Math.max(names.length - 1, 0)) * cardStep();
+  updateCounter();
+}
+let cardTarget = null, cardTargetUntil = 0;
+function cardStep() {
+  const first = $('#carousel').children[0];
+  return first ? first.offsetWidth + 14 : 1;
+}
+function currentCard() {
+  return Math.round($('#carousel').scrollLeft / cardStep());
+}
+function shownCard() {
+  return cardTarget !== null && Date.now() < cardTargetUntil ? cardTarget : currentCard();
+}
+function updateCounter() {
+  const total = cardNames().length, i = Math.min(shownCard(), Math.max(total - 1, 0));
+  $('#cardCounter').textContent = total ? `${i + 1} / ${total}` : '';
+  $('#prevCard').disabled = i <= 0;
+  $('#nextCard').disabled = i >= total - 1;
+}
+function goCard(delta) {
+  const total = cardNames().length;
+  cardTarget = Math.max(0, Math.min(total - 1, shownCard() + delta));
+  cardTargetUntil = Date.now() + 700;
+  $('#carousel').scrollTo({ left: cardTarget * cardStep(), behavior: 'smooth' });
+  updateCounter();
+}
+function printCards() {
+  const names = cardNames();
+  let html = '';
+  for (let p = 0; p < names.length; p += 4) {
+    html += '<div class="print-page">' + names.slice(p, p + 4).map(n => orderCard(n)).join('') + '</div>';
+  }
+  $('#printArea').innerHTML = html;
+  window.print();
+}
+
+/* ============ Totaal ============ */
+function buildTotals() {
+  const groups = new Map(); // key -> {cat, label, qty, who:Set}
+  let amount = 0, people = 0;
+  NAMES.forEach(n => {
+    const items = cleanItems(orders[n] && orders[n].items);
+    if (items.length) people++;
+    items.forEach(l => {
+      const it = ITEMS[l.id];
+      amount += linePrice(l);
+      let label = it.name;
+      if (it.saus) label += l.saus && ITEMS[l.saus] ? ' met ' + ITEMS[l.saus].name.toLowerCase() : ' zonder saus';
+      if (l.opm) label += ' – ' + l.opm;
+      const key = l.id + '|' + (it.saus ? l.saus : '') + '|' + (l.opm || '').toLowerCase();
+      if (!groups.has(key)) groups.set(key, { cat: it.cat, order: MENU.indexOf(it.cat) * 1000 + it.cat.list.indexOf(it), label, qty: 0, who: new Set(), opm: !!l.opm });
+      const g = groups.get(key);
+      g.qty += l.qty; g.who.add(n);
+    });
+  });
+  const rows = [...groups.values()].sort((a, b) => a.order - b.order || a.label.localeCompare(b.label));
+  return { rows, amount, people };
+}
+
+function renderTotal() {
+  if (!loaded || !isHost) return;
+  const { rows, amount, people } = buildTotals();
+  $('#totalMeta').textContent = `${people} van ${NAMES.length} personen hebben besteld.`;
+  if (!rows.length) { $('#total').innerHTML = '<div class="loading">🍂 Er is nog niets besteld.</div>'; return; }
+  let html = '', cur = null;
+  rows.forEach(r => {
+    if (r.cat !== cur) { if (cur) html += '</div>'; cur = r.cat; html += `<div class="total-cat"><h3>${r.cat.emoji} ${esc(r.cat.cat)}</h3>`; }
+    html += `<div class="total-row"><span class="q">${r.qty}×</span><span>${esc(r.label)}${r.opm ? `<br><span class="who">voor ${[...r.who].map(esc).join(', ')}</span>` : ''}</span></div>`;
+  });
+  html += '</div>';
+  html += `<div class="estimate"><span>Indicatie totaal (excl. drinken)</span><span>± ${euro(amount)}</span></div>`;
+  $('#total').innerHTML = html;
+}
+
+function totalText() {
+  const { rows, people } = buildTotals();
+  let out = `Bestelling voor vrijdagavond (${people} personen)\n`, cur = null;
+  rows.forEach(r => {
+    if (r.cat !== cur) { cur = r.cat; out += `\n${r.cat.cat.toUpperCase()}\n`; }
+    out += `${r.qty}× ${r.label}\n`;
+  });
+  return out.trim();
+}
+
+/* ============ Algemeen ============ */
+let toastTimer;
+function toast(msg, err) {
+  const t = $('#toast');
+  t.textContent = msg; t.classList.toggle('err', !!err); t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+function renderAll() {
+  $('#tabs').hidden = !isHost;
+  if (!isHost && $('#panel-bestellen').hidden) showTab('bestellen');
+  $('#welcome').hidden = !!me;
+  $('#orderScreen').hidden = !me;
+  $('#whoName').textContent = me || '';
+  renderDeadline(); renderBanners(); renderNames(); renderMenu(); renderBasket(); renderDock(); renderPersons(); renderCards(); renderTotal();
+}
+
+async function refresh(showToast) {
+  try {
+    orders = await api.load(me);
+    loaded = true;
+    if (me && !dirty) basket = JSON.parse(JSON.stringify(cleanItems(orders[me] && orders[me].items)));
+    renderAll();
+    if (showToast) toast('Bijgewerkt ✓');
+  } catch (e) {
+    loaded = true;
+    renderAll();
+    toast('Kon bestellingen niet ophalen: ' + e.message, true);
+  }
+}
+
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', t.dataset.tab === name));
+  document.querySelectorAll('.panel').forEach(p => p.hidden = p.id !== 'panel-' + name);
+  renderDock();
+  if (name !== 'bestellen') refresh(false);
+  window.scrollTo({ top: $('nav.tabs').offsetTop, behavior: 'smooth' });
+}
+
+/* ============ Events ============ */
+document.addEventListener('click', e => {
+  const t = e.target.closest('button');
+  if (!t) return;
+  if (t.dataset.tab) return showTab(t.dataset.tab);
+  if (t.dataset.name) return pickName(t.dataset.name);
+  if (t.dataset.add) return addItem(t.dataset.add);
+  if (t.dataset.inc != null) { basket[+t.dataset.inc].qty++; dirty = true; }
+  else if (t.dataset.dec != null) {
+    const l = basket[+t.dataset.dec];
+    if (--l.qty <= 0) basket.splice(+t.dataset.dec, 1);
+    dirty = true;
+  } else return;
+  renderMenu(); renderBasket(); renderDock();
+});
+document.addEventListener('change', e => {
+  if (e.target.dataset.saus != null) {
+    basket[+e.target.dataset.saus].saus = e.target.value; dirty = true; renderMenu(); renderBasket();
+  }
+});
+document.addEventListener('input', e => {
+  if (e.target.dataset.opm != null) {
+    basket[+e.target.dataset.opm].opm = e.target.value;
+    if (!dirty) { dirty = true; const btn = $('#submit'); btn.disabled = isClosed(); btn.textContent = orders[me] ? 'Wijzigingen opslaan' : 'Bestelling versturen'; }
+  }
+});
+$('#menu').addEventListener('toggle', e => {
+  const d = e.target;
+  if (d.matches && d.matches('details.cat') && !$('#search').value) d.open ? openCats.add(d.dataset.cat) : openCats.delete(d.dataset.cat);
+}, true);
+$('#search').addEventListener('input', renderMenu);
+$('#submit').addEventListener('click', submit);
+$('#switchName').addEventListener('click', switchName);
+$('#dockBtn').addEventListener('click', () => $('#basketCard').scrollIntoView({ behavior: 'smooth', block: 'start' }));
+$('#refreshBtn').addEventListener('click', () => refresh(true));
+$('#pdfBtn').addEventListener('click', printCards);
+$('#prevCard').addEventListener('click', () => goCard(-1));
+$('#nextCard').addEventListener('click', () => goCard(1));
+$('#carousel').addEventListener('scroll', () => requestAnimationFrame(updateCounter), { passive: true });
+document.addEventListener('keydown', e => {
+  if ($('#panel-kaarten').hidden) return;
+  if (e.key === 'ArrowLeft') goCard(-1);
+  if (e.key === 'ArrowRight') goCard(1);
+});
+$('#copyBtn').addEventListener('click', async () => {
+  const txt = totalText();
+  try { await navigator.clipboard.writeText(txt); toast('Bestelling gekopieerd 📋'); }
+  catch (e) { prompt('Kopieer de bestelling:', txt); }
+});
+window.addEventListener('beforeunload', e => { if (dirty && basket.length) { e.preventDefault(); e.returnValue = ''; } });
+setInterval(renderDeadline, 30000);
+
+renderAll();
+const firstLoad = refresh(false);
+</script>
+</body>
+</html>
